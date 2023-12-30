@@ -11,11 +11,13 @@ import {
     CurrentRefinements,
     Highlight,
     ClearRefinements,
-    useInstantSearch
+    useInstantSearch,
+    useRefinementList,
+    useRange,
 } from 'react-instantsearch';
 import algoliasearch from 'algoliasearch/lite';
 import type { UiState } from 'instantsearch.js';
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 // Defines the custom elements from the date picker for use on the window object
 import { MapContainer, TileLayer } from 'react-leaflet';
@@ -32,6 +34,8 @@ const searchClient = algoliasearch(algoliaAppId, algoliaSearchKey);
 // Algolia Index
 const indexName = algoliaIndexName;
 
+const now = new Date();
+
 const CompanyHit = (data) => {
     const { hit } = data;
     const distance = (hit._rankingInfo.geoDistance/1000).toFixed(1);
@@ -44,7 +48,7 @@ const CompanyHit = (data) => {
             <p className="mb-2">Available dates: {hit.companyAvailableContractTimeSlots.map((date, i) => {
                 return (
                     <span key={i} className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-                        {(new Date(date.timestamp)).toLocaleDateString()}
+                        {(new Date(date.timestamp*1000)).toLocaleDateString()}
                     </span>
                 );
             })}
@@ -57,18 +61,56 @@ const CompanyHit = (data) => {
 
 function DateRefinement() {
     const { indexUiState, setIndexUiState } = useInstantSearch();
-    console.log('indexUiState', indexUiState);
+
+    // const { items, refine } = useRefinementList({
+    //     attribute: "companyAvailableContractTimeSlots.timestamp",
+    // });
+
+    const { start, range, canRefine, refine } = useRange({
+        attribute: "companyAvailableContractTimeSlots.timestamp",
+        min: Math.floor((now).getTime()/1000),
+        //max: Math.floor(((now).getTime() + 864000000)/1000),
+    });
+    const { min, max } = range;
+
+    const from = Math.max(min, Number.isFinite(start[0]) ? start[0] : min);
+    const to = Math.min(max, Number.isFinite(start[1]) ? start[1] : max);
+
+    const [value, setValue] = useState({
+        start: from,
+        end: to,
+    });
+
+    useEffect(() => {
+        setValue({ start: from, end: to });
+    }, [from, to]);
+
     // Set date refinement for companyAvailableContractTimeSlots.timestamp
-    const handleDateRefinement = (date) => {
-        setIndexUiState((prevIndexUiState: UiState) => ({
-            ...prevIndexUiState,
-        }));
+    const handleDateRefinement = (evt) => {
+        const date = evt.target.value;
+
+        // refine((new Date(date)).getTime());
+        const startTs = Math.floor((new Date(date)).getTime()/1000);
+        const endTs = Math.floor(((new Date(date)).getTime() + 864000000)/1000);
+
+        refine([
+            startTs,
+            endTs,
+        ]);
     }
+
+    const datepickerValue = useMemo(() => {
+        // convert to string date format 'YYY/mm/dd'
+        return {
+            start: new Date(value.start * 1000).toISOString().split('T')[0],
+            end: new Date(value.end * 1000).toISOString().split('T')[0],
+        }
+    }, start);
 
     return (
         <CustomDatePicker
             identifier="date"
-            value=""
+            value={datepickerValue.start}
             onChange={handleDateRefinement}
         />
     )
@@ -163,17 +205,7 @@ function SearchPage() {
 
                     <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
                         <h2 className="text-xl font-semibold mb-2">Date</h2>
-                        <RangeInput
-                            attribute="companyAvailableContractTimeSlots.timestamp"
-                            min={0}
-                            classNames={{
-                                root: 'range-input',
-                                form: 'flex w-full',
-                                input: 'px-2 w-full border rounded',
-                                separator: 'mx-2',
-                                submit: 'ml-2 px-3 bg-blue-500 text-white',
-                            }}
-                        />
+                        <DateRefinement />
                     </div>
 
                         {/* GeoSearch for companyAddress coordinates */}

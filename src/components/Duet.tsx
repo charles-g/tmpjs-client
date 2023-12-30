@@ -1,7 +1,8 @@
+'use client'
+
 import React, { useEffect, useRef } from "react";
 import { defineCustomElements } from "@duetds/date-picker/dist/loader";
 import '@duetds/date-picker/dist/duet/themes/default.css'; // Make sure to import the styles
-defineCustomElements(window);
 
 function useListener(ref, eventName, handler) {
     useEffect(() => {
@@ -30,6 +31,10 @@ export function CustomDatePicker({
     useListener(ref, "duetBlur", onBlur);
     useListener(ref, "duetOpen", onOpen);
     useListener(ref, "duetClose", onClose);
+
+    useEffect(() => {
+        defineCustomElements(window);
+    }, []);
 
     useEffect(() => {
         ref.current.localization = localization;
