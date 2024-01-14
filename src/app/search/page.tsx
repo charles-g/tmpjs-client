@@ -13,20 +13,23 @@ import {
     ClearRefinements,
     useInstantSearch,
     useRefinementList,
-    useRange,
+    useToggleRefinement, useRange, useHits, useCurrentRefinements
 } from 'react-instantsearch';
 import algoliasearch from 'algoliasearch/lite';
-import type { UiState } from 'instantsearch.js';
-import {useEffect, useMemo, useState} from 'react';
 
-// Defines the custom elements from the date picker for use on the window object
-import { MapContainer, TileLayer } from 'react-leaflet';
-import {CustomDatePicker} from "@/components/Duet";
+import {useEffect, useMemo, useState} from 'react';
+import {
+    CustomClearRefinements,
+    CustomCurrentRefinements,
+    CustomHits,
+    CustomRatingRangeSlider,
+    DateRefinement
+} from "@/components/search/algolia/custom-components";
 
 // Replace these with your Algolia credentials
-const algoliaAppId = 'RRF095AMPW';
-const algoliaSearchKey = '32bd623aff8882a3e8e59bc055e3da12';
-const algoliaIndexName = 'omd';
+const algoliaAppId = 'BD8UVRQT34';
+const algoliaSearchKey = '95bcc902b6f02a71642725d46ea5ead8';
+const algoliaIndexName = 'availabilities';
 
 // Create an Algolia search client
 const searchClient = algoliasearch(algoliaAppId, algoliaSearchKey);
@@ -35,86 +38,6 @@ const searchClient = algoliasearch(algoliaAppId, algoliaSearchKey);
 const indexName = algoliaIndexName;
 
 const now = new Date();
-
-const CompanyHit = (data) => {
-    const { hit } = data;
-    const distance = (hit._rankingInfo.geoDistance/1000).toFixed(1);
-
-    return (
-        <div className="mb-4 p-4 border rounded bg-white">
-            <h2 className="text-xl font-semibold mb-2">{hit.companyName}</h2>
-            <p className="mb-2">{hit.companyAddress.street}, {hit.companyAddress.city}, {hit.companyAddress.country}</p>
-            <p className="mb-2">Skills: {hit.companySkills.map(skill => skill.skillName).join(', ')}</p>
-            <p className="mb-2">Available dates: {hit.companyAvailableContractTimeSlots.map((date, i) => {
-                return (
-                    <span key={i} className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-                        {(new Date(date.timestamp*1000)).toLocaleDateString()}
-                    </span>
-                );
-            })}
-            </p>
-            <p>Rating: {hit.postContractFeedbacks.positivePercentage} %</p>
-            <p>Distance: {distance} km</p>
-        </div>
-    )
-};
-
-function DateRefinement() {
-    const { indexUiState, setIndexUiState } = useInstantSearch();
-
-    // const { items, refine } = useRefinementList({
-    //     attribute: "companyAvailableContractTimeSlots.timestamp",
-    // });
-
-    const { start, range, canRefine, refine } = useRange({
-        attribute: "companyAvailableContractTimeSlots.timestamp",
-        min: Math.floor((now).getTime()/1000),
-        //max: Math.floor(((now).getTime() + 864000000)/1000),
-    });
-    const { min, max } = range;
-
-    const from = Math.max(min, Number.isFinite(start[0]) ? start[0] : min);
-    const to = Math.min(max, Number.isFinite(start[1]) ? start[1] : max);
-
-    const [value, setValue] = useState({
-        start: from,
-        end: to,
-    });
-
-    useEffect(() => {
-        setValue({ start: from, end: to });
-    }, [from, to]);
-
-    // Set date refinement for companyAvailableContractTimeSlots.timestamp
-    const handleDateRefinement = (evt) => {
-        const date = evt.target.value;
-
-        // refine((new Date(date)).getTime());
-        const startTs = Math.floor((new Date(date)).getTime()/1000);
-        const endTs = Math.floor(((new Date(date)).getTime() + 864000000)/1000);
-
-        refine([
-            startTs,
-            endTs,
-        ]);
-    }
-
-    const datepickerValue = useMemo(() => {
-        // convert to string date format 'YYY/mm/dd'
-        return {
-            start: new Date(value.start * 1000).toISOString().split('T')[0],
-            end: new Date(value.end * 1000).toISOString().split('T')[0],
-        }
-    }, start);
-
-    return (
-        <CustomDatePicker
-            identifier="date"
-            value={datepickerValue.start}
-            onChange={handleDateRefinement}
-        />
-    )
-}
 
 function SearchPage() {
     const [distance, setDistance] = useState(20);
@@ -137,87 +60,78 @@ function SearchPage() {
                     aroundLatLngViaIP
                 />
 
-                <CurrentRefinements
-                    classNames={{
-                        root: 'current-refinements mb-5',
-                        list: 'flex flex-wrap',
-                        label: 'hidden',
-                        category: 'p-2 border rounded bg-blue-500 text-white mr-2 mb-2',
-                        delete: 'ml-2',
-                    }}
-                />
-
-                <ClearRefinements
-                    classNames={{
-                        root: 'clear-refinements mb-5',
-                    }}
-                />
-
-                <div className="flex mb-4">
-                    {/* SearchBox component for the search input */}
-                    <SearchBox
-                        classNames={{
-                            root: 'searchbox',
-                            form: 'flex w-full',
-                            input: 'p-2 w-full',
-                            submit: 'px-3 bg-white',
-                            reset: 'px-3 bg-white',
-                        }}
-                    />
+                <div className="flex items-center content-center1" style={{minHeight: "100px"}}>
+                    <CustomCurrentRefinements />
+                    <CustomClearRefinements className="mb-5 mt-2" style={{position:"relative", bottom:"-17px"}} />
                 </div>
 
-                <div className="widgets md:flex justify-between gap-10">
-                    {/* RefinementList for companySkills */}
-                    <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Skills</h2>
-                        <RefinementList
-                            attribute="companySkills.skillName"
-                            searchable
-                            showMore
-                            limit={5}
-                            classNames={{
-                                root: 'refinement-skills',
-                                searchBox: 'mb-3 border',
-                                item: 'mb-2 bg-gray-100 p-2 border rounded',
-                                selectedItem: '',
-                                checkbox: 'mr-2 cursor-pointer',
-                                labelText: 'mr-2 cursor-pointer',
-                                count: 'font-bold',
-                            }}
-                        >
-                        </RefinementList>
-                    </div>
+                <div className="flex gap-5">
+                    <div className="w-25">
+                        <div className="widgets flex flex-col-reverse justify-between">
+                        {/* RefinementList for companySkills */}
+                        <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
+                            <h2 className="text-xl font-semibold mb-2">Skills</h2>
+                            <RefinementList
+                                attribute="companySkills.skillName"
+                                searchable
+                                showMore
+                                limit={5}
+                                classNames={{
+                                    root: 'refinement-skills',
+                                    searchBox: 'mb-3 border',
+                                    item: 'mb-2 bg-gray-100 p-2 border rounded',
+                                    selectedItem: '',
+                                    checkbox: 'mr-2 cursor-pointer',
+                                    labelText: 'mr-2 cursor-pointer',
+                                    count: 'font-bold',
+                                }}
+                            >
+                            </RefinementList>
+                        </div>
 
-                    <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Rating</h2>
-                        <RangeInput
-                            attribute="postContractFeedbacks.positivePercentage"
-                            min={0} max={100}
-                            classNames={{
-                                root: 'range-input',
-                                form: 'flex w-full',
-                                input: 'px-2 w-full border rounded',
-                                separator: 'mx-2',
-                                submit: 'ml-2 px-3 bg-blue-500 text-white',
-                            }}
-                        />
-                    </div>
+                        <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
+                            <h2>Position</h2>
+                            <RefinementList
+                                attribute="contractPositionName"
+                                searchable
+                                showMore
+                                limit={5}
+                                classNames={{
+                                    root: 'refinement-skills',
+                                    searchBox: 'mb-3 border',
+                                    item: 'mb-2 bg-gray-100 p-2 border rounded',
+                                    selectedItem: '',
+                                    checkbox: 'mr-2 cursor-pointer',
+                                    labelText: 'mr-2 cursor-pointer',
+                                    count: 'font-bold',
+                                }}
+                            >
+                            </RefinementList>
+                        </div>
 
-                    <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Date</h2>
-                        <DateRefinement />
-                    </div>
+                        <div>
+                            <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
+                                <h2 className="text-xl font-semibold mb-2">Date</h2>
+                                <DateRefinement />
+                            </div>
 
-                        {/* GeoSearch for companyAddress coordinates */}
-                    <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Distance maximum</h2>
-                        <input name="distance" type="range" min="1" max="20" value={distance} onInput={(e) => setDistance(e.target.value)} />
-                        <div className="py-2">{distance} km</div>
+                            <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
+                                <h2 className="text-xl font-semibold mb-2">Distance maximum</h2>
+                                <input name="distance" type="range" min="1" max="35" value={distance} onInput={(e) => setDistance(e.target.value)} />
+                                <div className="py-2">{distance} km</div>
+                            </div>
+
+                            <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
+                                <h2 className="text-xl font-semibold mb-2">Rating</h2>
+                                <CustomRatingRangeSlider />
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div className="flex-grow">
+                        <CustomHits />
                     </div>
                 </div>
-
-                {/* Hits component to display search results */}
-                <Hits hitComponent={CompanyHit} />
             </InstantSearch>
         </div>
     );
