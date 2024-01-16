@@ -6,25 +6,12 @@ import {
     useClearRefinements
 } from "react-instantsearch";
 import {CustomDatePicker} from "@/components/Duet";
-import {useState} from "react";
-import {className} from "@/utils/className";
+import React, {useState} from "react";
+import cn from "@/utils/className";
 import {debounce} from "@/utils/debounce";
-
-enum FacetAttributes {
-    company = 'companyName',
-    address = 'companyAddress',
-    skills = 'companySkills.skillName',
-    position = 'contractPositionName',
-    feedbacks = 'postContractFeedbacks.positivePercentage',
-    timestamp = 'timestamp',
-};
-
-const facetTranslations = {
-    [FacetAttributes.skills]: 'Skills',
-    [FacetAttributes.position]: 'Position',
-    [FacetAttributes.feedbacks]: 'Rating',
-    [FacetAttributes.timestamp]: 'Date',
-};
+import {FacetAttributes, facetTranslations} from "@/infra/search-engine/config";
+import {propsFilter} from "@/utils/propsFilter";
+import StarRating from "@/components/StarRating";
 
 const transformItems = (items) => {
     return items.map(item => {
@@ -89,7 +76,7 @@ export function CustomCurrentRefinements(props) {
     });
 
     return (
-        <div className="flex flex-col md:flex-row mb-3">
+        <div className="flex flex-col md:flex-row mb-3" {...props}>
             {filteredItems.map((item) => (
                 <div key={[item.indexName, item.label].join('/')}>
                     <div className="text-blue-800 font-medium me-2 py-0.5 mb-2">{ facetTranslations[item.attribute] }</div>
@@ -141,18 +128,30 @@ export function CustomHits(props) {
             {newItems.map(item => (
                 <div key={item.company} className="mb-4 p-4 border rounded bg-white">
                     <h2 className="text-xl font-semibold mb-2">{item.company}</h2>
-                    <div>
-                        <p>{item.hits[0].companyAddress.street}, {item.hits[0].companyAddress.city}, {item.hits[0].companyAddress.country}</p>
-                        <p>Skills: {item.hits[0].companySkills.map(skill => skill.skillName).join(', ')}</p>
-                        <p>Rating: {item.hits[0].postContractFeedbacks.positivePercentage} %</p>
+                    <div className="mb-2">
+                        <p className="font-light mb-2">
+                            {item.hits[0].companyAddress.street}, {item.hits[0].companyAddress.city}, {item.hits[0].companyAddress.country}
+                        </p>
+                        <p className="mb-2">
+                            {item.hits[0].companySkills.map(skill => (
+                                <span key={skill.skillName} className="inline-block bg-gray-100 px-2 py-1 rounded mr-2 mb-2">
+                                    {skill.skillName}
+                                </span>
+                            )
+                        )}
+                        </p>
+                        <p className="mb-2">
+                            <StarRating percentage={item.hits[0].postContractFeedbacks.positivePercentage} />
+                        </p>
+                        <h3 className="mb-2">Dates:</h3>
+                        {item.hits.map(hit => (
+                            <div key={hit.objectID}>
+                                <span className="badge-primary">
+                                    {(new Date(hit.timestamp*1000)).toLocaleDateString()}
+                                </span>
+                            </div>
+                        ))}
                     </div>
-                    {item.hits.map(hit => (
-                        <div key={hit.objectID}>
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                                {(new Date(hit.timestamp*1000)).toLocaleDateString()}
-                            </span>
-                        </div>
-                    ))}
                 </div>
             ))}
             {!isLastPage ? (
@@ -171,13 +170,7 @@ export function CustomHits(props) {
 export function DateRefinement() {
     const { start, range, canRefine, refine } = useRange({
         attribute: "timestamp",
-        // min: Math.floor((now).getTime()/1000),
-        // max: Math.floor(((now).getTime() + 864000000)/1000),
     });
-    // const { min, max } = {
-    //     min: Math.floor((now).getTime()/1000),
-    //     max: Math.floor(((now).getTime() + 864000000)/1000)
-    // };
 
     const { indexUiState, setIndexUiState } = useInstantSearch();
 
@@ -252,10 +245,14 @@ export function CustomClearRefinements(props) {
         return null;
     }
 
-    const classNames = className(props?.className, 'clear-refinements px-3 py-1 underline inline-block rounded');
+    const propsFiltered = propsFilter<{
+        style?: React.CSSProperties;
+        id?: string;
+    }>(props, ['style', 'id']);
+    const classNames = cn(props?.className, 'clear-refinements px-3 py-1 underline inline-block rounded');
 
     return (
-        <button {...props}
+        <button {...propsFiltered}
                 disabled={!canRefine}
                 onClick={refine}
                 className={classNames}>
