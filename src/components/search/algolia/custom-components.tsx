@@ -5,7 +5,7 @@ import {
     useRange,
     useClearRefinements
 } from "react-instantsearch";
-import {CustomDatePicker} from "@/components/Duet";
+import {CustomDatePicker} from "@/components/DuetDatePicker";
 import React, {useState} from "react";
 import cn from "@/utils/className";
 import {debounce} from "@/utils/debounce";
