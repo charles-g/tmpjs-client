@@ -14,35 +14,33 @@ export function RefinementFilters({ onDistanceUpdate }) {
     return (
         <>
             <div className="widgets flex flex-col-reverse justify-between">
-                <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
+                <div className="widget-wrapper mb-4 flex-grow">
                     <h2 className="text-xl font-semibold mb-2">Skills</h2>
                     <RefinementList
                         attribute="companySkills.skillName"
-                        searchable
                         showMore
                         limit={5}
                         classNames={{
                             root: 'refinement-skills',
                             searchBox: 'mb-3 border',
-                            item: 'mb-2 bg-gray-100 p-2 border rounded',
+                            item: 'mb-2 bg-gray-100 p-2 border-solid border-2 border-gray-400 rounded',
                             selectedItem: '',
                             checkbox: 'mr-2 cursor-pointer',
                             labelText: 'mr-2 cursor-pointer',
                             count: 'font-bold',
+                            showMore: 'text-blue-500 cursor-pointer text-sm',
                         }}
                     />
                 </div>
-                <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
-                    <h2>Position</h2>
+                <div className="widget-wrapper mb-4 flex-grow">
+                    <h2 className="text-xl font-semibold mb-2">Position</h2>
                     <RefinementList
                         attribute="contractPositionName"
-                        searchable
-                        showMore
                         limit={5}
                         classNames={{
                             root: 'refinement-skills',
                             searchBox: 'mb-3 border',
-                            item: 'mb-2 bg-gray-100 p-2 border rounded',
+                            item: 'mb-2 bg-gray-100 p-2 border-solid border-2 border-gray-400 rounded',
                             selectedItem: '',
                             checkbox: 'mr-2 cursor-pointer',
                             labelText: 'mr-2 cursor-pointer',
@@ -51,19 +49,19 @@ export function RefinementFilters({ onDistanceUpdate }) {
                     />
                 </div>
                 <div>
-                    <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Date</h2>
+                    <div className="widget-wrapper mb-4 flex-grow">
+                        <h2 className="text-xl font-semibold mb-2">Start date</h2>
                         <DateRefinement/>
                     </div>
 
-                    <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Distance maximum</h2>
+                    <div className="widget-wrapper mb-4 flex-grow">
+                        <h2 className="text-xl font-semibold mb-2">Distance</h2>
                         <input name="distance" type="range" min="1" max="35" value={distance}
                                onInput={(e) => setDistance(e.target.value)}/>
                         <div className="py-2">{distance} km</div>
                     </div>
 
-                    <div className="widget-wrapper mb-4 bg-white shadow-md p-4 rounded flex-grow">
+                    <div className="widget-wrapper mb-4 flex-grow">
                         <h2 className="text-xl font-semibold mb-2">Rating</h2>
                         <CustomRatingRangeSlider/>
                     </div>

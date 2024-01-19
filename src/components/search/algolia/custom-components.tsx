@@ -76,7 +76,7 @@ export function CustomCurrentRefinements(props) {
     });
 
     return (
-        <div className="flex flex-col md:flex-row mb-3" {...props}>
+        <div className="flex flex-nowrap flex-col md:flex-row mb-3" {...props}>
             {filteredItems.map((item) => (
                 <div key={[item.indexName, item.label].join('/')}>
                     <div className="text-blue-800 font-medium me-2 py-0.5 mb-2">{ facetTranslations[item.attribute] }</div>
@@ -140,9 +140,9 @@ export function CustomHits(props) {
                             )
                         )}
                         </p>
-                        <p className="mb-2">
+                        <div className="mb-2">
                             <StarRating percentage={item.hits[0].postContractFeedbacks.positivePercentage} />
-                        </p>
+                        </div>
                         <h3 className="mb-2">Dates:</h3>
                         {item.hits.map(hit => (
                             <div key={hit.objectID}>

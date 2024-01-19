@@ -23,6 +23,12 @@ const CustomModal = ({ open, onClose, children, templateParts }) => {
         <Dialog open={open} onClose={onClose}>
             <DialogOverlay className="fixed inset-0 bg-black/50" />
             <DialogContent className="fixed inset-0 flex flex-col items-center justify-center">
+                <button
+                    onClick={onClose}
+                    className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-800 cursor-pointer"
+                >
+                    Close X
+                </button>
                 <div className="bg-white p-8 w-full md:w-1/2 overflow-y-auto h-full md:h-3/4">
                     {content}
                 </div>
