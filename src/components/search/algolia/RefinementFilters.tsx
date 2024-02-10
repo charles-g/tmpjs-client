@@ -1,5 +1,5 @@
 import {RefinementList} from "react-instantsearch";
-import {CustomRatingRangeSlider, DateRefinement} from "@/components/search/algolia/custom-components";
+import {CustomRatingRangeSlider, DateRefinement} from "@/components/search/algolia/CustomComponents";
 import {FormEvent, useEffect, useMemo, useState} from "react";
 
 export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (radius: number) => void }) {

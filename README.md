@@ -1,6 +1,28 @@
+### This is meant to evaluate a possible workaround for the "booking" use case with Algolia.
+
+#### Search engine interface for temporary jobs.
+
+Deployment: https://tmpc-client.vercel.app/
+
+Context:  
+
+The use case is known to be a challenge for Algolia.
+
+https://discourse.algolia.com/t/search-on-availability-dates/6522  
+
+https://discourse.algolia.com/t/working-with-dates-availability-booking-system/11081/3
+
+As a possible workaround, we index job availabilities (dates) with company context,
+group these by company.
+
+As pagination becomes incorrect, we try using infinite hits for a workaround.
+
+***
+
+### Getting Started
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
 
 First, run the development server:
 
