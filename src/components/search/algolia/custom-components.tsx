@@ -6,29 +6,51 @@ import {
     useClearRefinements
 } from "react-instantsearch";
 import {CustomDatePicker} from "@/components/DuetDatePicker";
-import React, {useState} from "react";
+import React, {FormEvent, Key, useState} from "react";
 import cn from "@/utils/className";
 import {debounce} from "@/utils/debounce";
 import {FacetAttributes, facetTranslations} from "@/infra/search-engine/config";
 import {propsFilter} from "@/utils/propsFilter";
 import StarRating from "@/components/StarRating";
+import {Hit} from "@algolia/client-search";
+import {
+    CurrentRefinementsConnectorParamsItem
+} from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
+import {BaseHit} from "instantsearch.js";
+
+type Refinement = {
+    label: string;
+    value: number;
+};
+
+type CustomHit = {
+    companyName: string;
+    companyAddress: {
+        street: string;
+        city: string;
+        country: string;
+    };
+    companySkills: {
+        skillName: string;
+    }[];
+    postContractFeedbacks: {
+        positivePercentage: number;
+    };
+    timestamp: number;
+};
+
+type RefinementItem = CurrentRefinementsConnectorParamsItem;
 
 const transformItems = (items) => {
     return items.map(item => {
         if (item.attribute === FacetAttributes.feedbacks) {
-            const refinements = [];
+            const refinements: Refinement[] = [];
             if (item.refinements[0] !== undefined) {
                 refinements.push({
                     ...item.refinements[0],
                     label: "≥ " + item.refinements[0].value + " %",
                 });
             }
-            // if (item.refinements[1] !== undefined && item.refinements[1].value) {
-            //     refinements.push({
-            //         ...item.refinements[1],
-            //         label: "≤ " + item.refinements[1].value + " %",
-            //     });
-            // }
             return {
                 ...item,
                 label: facetTranslations[item.attribute],
@@ -36,7 +58,7 @@ const transformItems = (items) => {
             };
         }
         if (item.attribute === 'timestamp') {
-            const refinements = [];
+            const refinements: Refinement[] = [];
             if (item.refinements[0] !== undefined) {
                 const start = item.refinements[0].value;
                 refinements.push({
@@ -62,14 +84,14 @@ const transformItems = (items) => {
 };
 
 export function CustomCurrentRefinements(props) {
-    const { items, canRefine, refine } = useCurrentRefinements({
+    const { items, refine } = useCurrentRefinements({
         transformItems,
         excludedAttributes: [FacetAttributes.feedbacks],
     });
 
-    const filteredItems = items.filter((item) => {
+    const filteredItems : RefinementItem[] = items.filter((item) => {
         if (item.attribute === FacetAttributes.feedbacks) {
-            return item.refinements[0] !== undefined && item.refinements[0].value > 0;
+            return item.refinements[0] !== undefined && item.refinements[0].value as number > 0;
         } else {
             return item.refinements.length > 0;
         }
@@ -102,17 +124,19 @@ export function CustomCurrentRefinements(props) {
     );
 }
 
-function getUniqueCompanies(items) {
+function getUniqueCompanyNames(items) : string[] {
     return items.map(item => item.companyName);
 }
 
 export function CustomHits(props) {
-    const { hits, showPrevious, showMore, isFirstPage, isLastPage } = useInfiniteHits(props);
-    const companies = getUniqueCompanies(hits);
-    const uniqueCompanies = [...new Set(companies)];
-    const newItems = uniqueCompanies.map(company => ({
-        company,
-        hits: hits.filter(item => item.companyName === company),
+    const { hits, showPrevious, showMore, isFirstPage, isLastPage } = useInfiniteHits<CustomHit>(props);
+    const companyNames = getUniqueCompanyNames(hits);
+    const uniqueCompanyNames = Array.from(new Set(companyNames));
+    const getHitsByCompany = (company: string) => hits.filter(item => item.companyName === company);
+
+    const newItems = uniqueCompanyNames.map(companyName => ({
+        company: companyName,
+        hits: getHitsByCompany(companyName)
     }));
 
     return (
@@ -125,7 +149,7 @@ export function CustomHits(props) {
                     Show previous results
                 </button>
             ) : null}
-            {newItems.map(item => (
+            {newItems.map((item) => (
                 <div key={item.company} className="mb-4 p-4 border rounded bg-white">
                     <h2 className="text-xl font-semibold mb-2">{item.company}</h2>
                     <div className="mb-2">
@@ -201,7 +225,7 @@ export function DateRefinement() {
     )
 }
 
-export function CustomRatingRangeSlider(props) {
+export function CustomRatingRangeSlider(props: any) {
     const { start, range, canRefine, refine } = useRange({
         attribute: "postContractFeedbacks.positivePercentage",
         min: 0,
@@ -226,7 +250,7 @@ export function CustomRatingRangeSlider(props) {
                     min="0"
                     max="100"
                     value={ratingValue}
-                    onInput={(e) => handleInput(e.target.value)} />
+                    onInput={(e: FormEvent<HTMLInputElement>) => handleInput(Number((e.target as HTMLInputElement).value))} />
             </div>
             <div className="pb-2 pt-1 px-1">
                 100%
@@ -236,7 +260,7 @@ export function CustomRatingRangeSlider(props) {
 
 }
 
-export function CustomClearRefinements(props) {
+export function CustomClearRefinements(props: any) {
     const { canRefine, refine } = useClearRefinements({
         excludedAttributes: [FacetAttributes.feedbacks],
     });

@@ -1,15 +1,15 @@
 import {RefinementList} from "react-instantsearch";
-import {CustomHits, CustomRatingRangeSlider, DateRefinement} from "@/components/search/algolia/custom-components";
-import {useEffect, useMemo, useState} from "react";
+import {CustomRatingRangeSlider, DateRefinement} from "@/components/search/algolia/custom-components";
+import {FormEvent, useEffect, useMemo, useState} from "react";
 
-export function RefinementFilters({ onDistanceUpdate }) {
+export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (radius: number) => void }) {
 
     const [distance, setDistance] = useState(20);
     const radius = useMemo(() => distance * 1000, [distance]);
 
     useEffect(() => {
         onDistanceUpdate(radius);
-    }, [radius]);
+    }, [radius, onDistanceUpdate]);
 
     return (
         <>
@@ -57,7 +57,7 @@ export function RefinementFilters({ onDistanceUpdate }) {
                     <div className="widget-wrapper mb-4 flex-grow">
                         <h2 className="text-xl font-semibold mb-2">Distance</h2>
                         <input name="distance" type="range" min="1" max="35" value={distance}
-                               onInput={(e) => setDistance(e.target.value)}/>
+                               onInput={(e: FormEvent<HTMLInputElement>) => setDistance(Number((e.target as HTMLInputElement).value))}/>
                         <div className="py-2">{distance} km</div>
                     </div>
 

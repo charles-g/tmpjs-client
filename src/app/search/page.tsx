@@ -2,7 +2,6 @@
 
 import {
     InstantSearch,
-    GeoSearch,
     Configure,
     useInstantSearch,
     useRefinementList,

@@ -7,7 +7,7 @@ const Navbar = () => {
                 {/* Logo */}
                 <div className="text-black text-lg font-semibold">TJS</div>
                 <div className="w-3/4 md:w-auto">
-                    <p className="text-sm">This is a POC for the "booking" use case with Algolia.</p>
+                    <p className="text-sm">This is a POC for the &quot;booking&quot; use case with Algolia.</p>
                     <p className="text-sm">It is a search engine for temporary jobs.</p>
                 </div>
             </div>

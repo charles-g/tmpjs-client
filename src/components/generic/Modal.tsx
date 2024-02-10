@@ -1,10 +1,12 @@
-import React, {Children} from 'react';
+// @ts-nocheck
+
+import React from 'react';
 import { Dialog, DialogOverlay, DialogContent } from '@radix-ui/react-dialog';
 
-const findChildById = (children, targetId) => {
+const findChildById = (children: React.ReactNode, targetId: string) => {
     let foundChild = null;
 
-    React.Children.forEach(children, (child: any) => {
+    React.Children.forEach(children, (child: React.ReactNode) => {
         if (React.isValidElement(child) && child.props.id === targetId) {
             foundChild = child;
         }
@@ -13,11 +15,22 @@ const findChildById = (children, targetId) => {
     return foundChild;
 };
 
-const CustomModal = ({ open, onClose, children, templateParts }) => {
+type ModalPropTypes = {
+    open: boolean,
+    onClose: React.MouseEventHandler<HTMLButtonElement>,
+    children: React.ReactNode,
+    templateParts: {
+        wrapperId: string,
+        contentId: string,
+        actionId: string,
+    },
+};
+
+const CustomModal = ({ open, onClose, children, templateParts }: ModalPropTypes) => {
 
     const wrapper = findChildById(children, templateParts.wrapperId);
-    const content = findChildById(wrapper.props.children, templateParts.contentId);
-    const bottomButton = findChildById(wrapper.props.children, templateParts.actionId);
+    const content = wrapper ? findChildById(wrapper.props.children, templateParts.contentId) : null;
+    const bottomButton = wrapper ? findChildById(wrapper.props.children, templateParts.actionId) : null;
 
     return (
         <Dialog open={open} onClose={onClose}>

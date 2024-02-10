@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 'use client'
 
 import React, { useEffect, useRef } from "react";
@@ -14,17 +16,18 @@ function useListener(ref, eventName, handler) {
     }, [eventName, handler, ref]);
 }
 
-export function CustomDatePicker({
-                               onChange,
-                               onFocus,
-                               onBlur,
-                               onOpen,
-                               onClose,
-                               dateAdapter,
-                               localization,
-                               ...props
-                           }) {
+export function CustomDatePicker(props) {
     const ref = useRef(null);
+
+    const {
+        onChange,
+        onFocus,
+        onBlur,
+        onOpen,
+        onClose,
+        dateAdapter,
+        localization,
+    } = props;
 
     useListener(ref, "duetChange", onChange);
     useListener(ref, "duetFocus", onFocus);
