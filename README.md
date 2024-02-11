@@ -1,8 +1,8 @@
-### This is meant to evaluate a possible workaround for the "booking" use case with Algolia.
+#### This is meant to evaluate a possible workaround for the "booking" use case with Algolia.
 
 #### Search engine interface for temporary jobs.
 
-Deployment: https://tmpc-client.vercel.app/
+Deployment: https://tmpjs-client.vercel.app/
 
 Context:  
 

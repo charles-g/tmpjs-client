@@ -11,13 +11,14 @@ import {
 } from 'react-instantsearch';
 import {
   CustomClearRefinements,
-  CustomCurrentRefinements,
-  CustomHits,
 } from "@/components/search/algolia/CustomComponents";
-import { appId, indexName, searchKey} from "@/infra/search-engine/config";
+import {CustomHits} from "@/components/search/algolia/CustomHits";
+import {CustomCurrentRefinements} from "@/components/search/algolia/CustomCurrentRefinements";
 import {RefinementFilters} from "@/components/search/algolia/RefinementFilters";
-import CustomModal from "@/components/generic/Modal";
 import {CustomStats} from "@/components/search/algolia/CustomStats";
+
+import { appId, indexName, searchKey} from "@/infra/search-engine/config";
+import CustomModal from "@/components/generic/Modal";
 
 // Create an Algolia search client
 const searchClient = algoliasearch(appId, searchKey);
@@ -34,7 +35,6 @@ function SearchPage() {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-
 
   return (
       <div className="container mx-auto p-4">
