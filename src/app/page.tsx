@@ -60,8 +60,8 @@ function SearchPage() {
               aroundLatLngViaIP
           />
 
-          <div className="flex gap-5">
-            <div className="hidden md:block">
+          <div className="flex gap-7">
+            <div className="w-1/4 hidden md:block">
               <RefinementFilters onDistanceUpdate={(radius) => {
                 setRadius(radius);
               }}/>

@@ -15,7 +15,7 @@ export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (rad
         <>
             <div className="widgets flex flex-col-reverse justify-between">
                 <div className="widget-wrapper mb-4 flex-grow">
-                    <h2 className="text-xl font-semibold mb-2">Skills</h2>
+                    <h2 className="text-base font-semibold mb-2">Skills</h2>
                     <RefinementList
                         attribute="companySkills.skillName"
                         showMore
@@ -33,7 +33,7 @@ export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (rad
                     />
                 </div>
                 <div className="widget-wrapper mb-4 flex-grow">
-                    <h2 className="text-xl font-semibold mb-2">Position</h2>
+                    <h2 className="text-base font-semibold mb-2">Position</h2>
                     <RefinementList
                         attribute="contractPositionName"
                         limit={5}
@@ -50,19 +50,19 @@ export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (rad
                 </div>
                 <div>
                     <div className="widget-wrapper mb-4 flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Start date</h2>
+                        <h2 className="text-base font-semibold mb-2">Start date</h2>
                         <DateRefinement/>
                     </div>
 
                     <div className="widget-wrapper mb-4 flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Distance</h2>
+                        <h2 className="text-base font-semibold mb-2">Distance</h2>
                         <input name="distance" type="range" min="1" max="35" value={distance}
                                onInput={(e: FormEvent<HTMLInputElement>) => setDistance(Number((e.target as HTMLInputElement).value))}/>
                         <div className="py-2">{distance} km</div>
                     </div>
 
                     <div className="widget-wrapper mb-4 flex-grow">
-                        <h2 className="text-xl font-semibold mb-2">Rating</h2>
+                        <h2 className="text-base font-semibold mb-2">Rating</h2>
                         <CustomRatingRangeSlider/>
                     </div>
                 </div>

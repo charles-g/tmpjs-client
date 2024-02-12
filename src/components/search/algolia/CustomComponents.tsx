@@ -1,12 +1,10 @@
 import {
-    useCurrentRefinements,
-    useInfiniteHits,
     useInstantSearch,
     useRange,
     useClearRefinements
 } from "react-instantsearch";
 import {CustomDatePicker} from "@/components/DuetDatePicker";
-import React, {FormEvent, Key, useState} from "react";
+import React, {FormEvent, useState} from "react";
 import cn from "@/utils/className";
 import {debounce} from "@/utils/debounce";
 import {FacetAttributes} from "@/infra/search-engine/config";
@@ -60,7 +58,7 @@ export function CustomRatingRangeSlider(props: any) {
         refine([value, 100]);
     });
 
-    return(
+    return (
         <div className="flex items-center content-center">
             <div className="pb-2 pt-1 px-1">0%</div>
             <div>
