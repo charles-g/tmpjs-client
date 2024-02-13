@@ -51,7 +51,7 @@ export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (rad
                 <div>
                     <div className="widget-wrapper mb-4 flex-grow">
                         <h2 className="text-base font-semibold mb-2">Start date</h2>
-                        <DateRefinement/>
+                        <DateRefinement startDate={"2024-01-11"}/>
                     </div>
 
                     <div className="widget-wrapper mb-4 flex-grow">

@@ -10,7 +10,7 @@ import {debounce} from "@/utils/debounce";
 import {FacetAttributes} from "@/infra/search-engine/config";
 import {propsFilter} from "@/utils/propsFilter";
 
-export function DateRefinement() {
+export function DateRefinement({startDate} : {startDate: string}) {
     const { start, range, canRefine, refine } = useRange({
         attribute: "timestamp",
     });
@@ -38,7 +38,7 @@ export function DateRefinement() {
     return (
         <CustomDatePicker
             identifier="date"
-            value=''
+            value={startDate}
             onChange={handleDateRefinement}
         />
     )

@@ -16,7 +16,18 @@ function useListener(ref, eventName, handler) {
     }, [eventName, handler, ref]);
 }
 
-export function CustomDatePicker(props) {
+type DatePickerProps = {
+    onChange?: (event: CustomEvent) => void;
+    onFocus?: (event: CustomEvent) => void;
+    onBlur?: (event: CustomEvent) => void;
+    onOpen?: (event: CustomEvent) => void;
+    onClose?: (event: CustomEvent) => void;
+    dateAdapter?: string;
+    localization?: string;
+    value?: string;
+};
+
+export function CustomDatePicker(props: DatePickerProps) {
     const ref = useRef(null);
 
     const {
@@ -27,6 +38,7 @@ export function CustomDatePicker(props) {
         onClose,
         dateAdapter,
         localization,
+        value
     } = props;
 
     useListener(ref, "duetChange", onChange);
