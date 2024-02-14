@@ -1,6 +1,6 @@
 #### This is meant to evaluate a possible workaround for the "booking" use case with Algolia.
-
 #### Search engine interface for temporary jobs.
+#### (Still in progress)
 
 Deployment: https://tmpjs-client.vercel.app/
 
@@ -16,6 +16,12 @@ As a possible workaround, we index job availabilities (dates) with company conte
 group these by company.
 
 As pagination becomes incorrect, we try using infinite hits for a workaround.
+
+#### Tech
+* Next.js 14 with app directory / React 18
+* Algolia https://www.algolia.com/doc/
+* Algolia React InstantSearch https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/react/
+* Tailwind
 
 ***
 
