@@ -38,7 +38,7 @@ const CustomModal = ({ open, onClose, children, templateParts }: ModalPropTypes)
             <DialogContent className="fixed inset-0 flex flex-col items-center justify-center">
                 <button
                     onClick={onClose}
-                    className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-800 cursor-pointer"
+                    className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-800 cursor-pointer z-10"
                 >
                     Close X
                 </button>

@@ -25,6 +25,7 @@ const searchClient = algoliasearch(appId, searchKey);
 
 function SearchPage() {
   const [radius, setRadius] = useState(20000);
+  const [rating, setRating] = useState(0);
 
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -38,7 +39,7 @@ function SearchPage() {
 
   return (
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold">Temp Job Search</h1>
+        <h1 className="text-2xl font-bold">Temp Job Search</h1>
 
         <button
             onClick={handleOpenModal}
@@ -62,9 +63,12 @@ function SearchPage() {
 
           <div className="flex gap-7">
             <div className="w-1/4 hidden md:block">
-              <RefinementFilters onDistanceUpdate={(radius) => {
-                setRadius(radius);
-              }}/>
+              <RefinementFilters
+                  distanceKm={radius/1000}
+                  onDistanceUpdate={(radius) => { setRadius(radius) }}
+                  onRatingUpdate={(rating) => setRating(rating)}
+                  minRating={rating}
+              />
             </div>
             <div className="w-full flex-grow">
               <div className="flex items-center justify-between">
@@ -94,9 +98,12 @@ function SearchPage() {
                   <CustomCurrentRefinements />
                   <CustomClearRefinements className="mb-5 mt-2" style={{position:"relative", bottom:"-17px"}} />
                 </div>
-                <RefinementFilters onDistanceUpdate={(radius) => {
-                  setRadius(radius);
-                }}/>
+                <RefinementFilters
+                    distanceKm={radius/1000}
+                    onDistanceUpdate={(radius) => { setRadius(radius) }}
+                    onRatingUpdate={(rating) => setRating(rating)}
+                    minRating={rating}
+                />
               </div>
               <div id="modal-actions">
                 <button

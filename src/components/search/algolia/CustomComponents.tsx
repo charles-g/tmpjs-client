@@ -43,17 +43,18 @@ export function DateRefinement({startDate} : {startDate: string}) {
     )
 }
 
-export function CustomRatingRangeSlider(props: any) {
+export function CustomRatingRangeSlider({ ratingPercentage, onRatingUpdate }) {
     const { start, range, canRefine, refine } = useRange({
         attribute: "postContractFeedbacks.positivePercentage",
         min: 0,
         max: 100,
     });
 
-    const [ratingValue, setRatingValue] = useState(0);
+    const [ratingValue, setRatingValue] = useState<number>(ratingPercentage);
 
     const handleInput = throttle((value) => {
         setRatingValue(value);
+        onRatingUpdate(value);
         refine([value, 100]);
     });
 

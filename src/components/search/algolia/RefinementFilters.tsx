@@ -1,15 +1,19 @@
 import {RefinementList} from "react-instantsearch";
 import {CustomRatingRangeSlider, DateRefinement} from "@/components/search/algolia/CustomComponents";
-import {FormEvent, useEffect, useMemo, useState} from "react";
+import {FormEvent} from "react";
 
-export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (radius: number) => void }) {
+type RefinementFiltersProps = {
+    minRating: number,
+    distanceKm: number,
+    onDistanceUpdate: (radius: number) => void,
+    onRatingUpdate: (rating) => void
+}
 
-    const [distance, setDistance] = useState(20);
-    const radius = useMemo(() => distance * 1000, [distance]);
+export function RefinementFilters({ onDistanceUpdate, distanceKm, minRating, onRatingUpdate }: RefinementFiltersProps) {
 
-    useEffect(() => {
-        onDistanceUpdate(radius);
-    }, [radius, onDistanceUpdate]);
+    const setDistance = (distance) => {
+        onDistanceUpdate(distance*1000);
+    }
 
     return (
         <>
@@ -56,14 +60,17 @@ export function RefinementFilters({ onDistanceUpdate }: { onDistanceUpdate: (rad
 
                     <div className="widget-wrapper mb-4 flex-grow">
                         <h2 className="text-base font-semibold mb-2">Distance</h2>
-                        <input name="distance" type="range" min="1" max="35" value={distance}
+                        <input name="distance" type="range" min="1" max="35" value={distanceKm}
                                onInput={(e: FormEvent<HTMLInputElement>) => setDistance(Number((e.target as HTMLInputElement).value))}/>
-                        <div className="py-2">{distance} km</div>
+                        <div className="py-2">{distanceKm} km</div>
                     </div>
 
                     <div className="widget-wrapper mb-4 flex-grow">
                         <h2 className="text-base font-semibold mb-2">Rating</h2>
-                        <CustomRatingRangeSlider/>
+                        <CustomRatingRangeSlider
+                            ratingPercentage={minRating}
+                            onRatingUpdate={(rating) => onRatingUpdate(rating)}
+                        />
                     </div>
                 </div>
             </div>
