@@ -10,7 +10,7 @@ export function debounce<T extends (...args: any[]) => void>(func: T, wait = 16)
 
 export function throttle<T extends (...args: any[]) => void>(func: T, wait = 50) {
     let throttle = false;
-    return function(...args){
+    return function (this: ThisParameterType<T>, ...args) {
         if (!throttle) {
             func.apply(this, args);
             throttle = true;

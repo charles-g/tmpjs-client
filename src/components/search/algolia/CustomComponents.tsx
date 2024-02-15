@@ -37,7 +37,6 @@ export function DateRefinement({startDate} : {startDate: string}) {
 
     return (
         <CustomDatePicker
-            identifier="date"
             value={startDate}
             onChange={handleDateRefinement}
         />
