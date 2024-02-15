@@ -6,7 +6,7 @@ import {
 import {CustomDatePicker} from "@/components/DuetDatePicker";
 import React, {FormEvent, useState} from "react";
 import cn from "@/utils/className";
-import {debounce} from "@/utils/debounce";
+import {throttle} from "@/utils/debounce-throttle";
 import {FacetAttributes} from "@/infra/search-engine/config";
 import {propsFilter} from "@/utils/propsFilter";
 
@@ -53,7 +53,7 @@ export function CustomRatingRangeSlider(props: any) {
 
     const [ratingValue, setRatingValue] = useState(0);
 
-    const handleInput = debounce((value) => {
+    const handleInput = throttle((value) => {
         setRatingValue(value);
         refine([value, 100]);
     });
