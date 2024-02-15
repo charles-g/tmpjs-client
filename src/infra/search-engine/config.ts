@@ -8,9 +8,9 @@ export enum FacetAttributes {
 };
 
 export const facetTranslations = {
-    [FacetAttributes.skills]: 'Skills',
-    [FacetAttributes.position]: 'Position',
-    [FacetAttributes.feedbacks]: 'Rating',
+    [FacetAttributes.skills]: 'Compétences',
+    [FacetAttributes.position]: 'Poste',
+    [FacetAttributes.feedbacks]: 'Note',
     [FacetAttributes.timestamp]: 'Date',
 };
 

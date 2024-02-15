@@ -26,6 +26,7 @@ const searchClient = algoliasearch(appId, searchKey);
 function SearchPage() {
   const [radius, setRadius] = useState(20000);
   const [rating, setRating] = useState(0);
+  const [minDate, setMinDate] = useState('2024-01-11');
 
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -39,7 +40,7 @@ function SearchPage() {
 
   return (
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold">Temp Job Search</h1>
+        <h1 className="text-xl font-bold">Trouvez une mission en intérim</h1>
 
         <button
             onClick={handleOpenModal}
@@ -68,6 +69,8 @@ function SearchPage() {
                   onDistanceUpdate={(radius) => { setRadius(radius) }}
                   onRatingUpdate={(rating) => setRating(rating)}
                   minRating={rating}
+                  minDate={minDate}
+                  onDateUpdate={(date) => setMinDate(date)}
               />
             </div>
             <div className="w-full flex-grow">
@@ -103,6 +106,8 @@ function SearchPage() {
                     onDistanceUpdate={(radius) => { setRadius(radius) }}
                     onRatingUpdate={(rating) => setRating(rating)}
                     minRating={rating}
+                    minDate={minDate}
+                    onDateUpdate={(date) => setMinDate(date)}
                 />
               </div>
               <div id="modal-actions">
@@ -110,7 +115,7 @@ function SearchPage() {
                     onClick={handleCloseModal}
                     className="mt-4 px-4 py-2 bg-green-500 text-white rounded cursor-pointer"
                 >
-                  Apply
+                  Appliquer
                 </button>
               </div>
             </div>

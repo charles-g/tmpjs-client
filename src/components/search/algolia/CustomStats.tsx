@@ -16,7 +16,7 @@ export function CustomStats(props) {
 
     return (
         <div className={className('text-sm', props.className)}>
-            {nbHits} results
+            {nbHits} résultats
         </div>
     );
 }

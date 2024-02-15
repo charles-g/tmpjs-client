@@ -3,13 +3,17 @@ import {CustomRatingRangeSlider, DateRefinement} from "@/components/search/algol
 import {FormEvent} from "react";
 
 type RefinementFiltersProps = {
+    minDate: string,
     minRating: number,
     distanceKm: number,
     onDistanceUpdate: (radius: number) => void,
-    onRatingUpdate: (rating) => void
+    onRatingUpdate: (rating) => void,
+    onDateUpdate: (date) => void
 }
 
-export function RefinementFilters({ onDistanceUpdate, distanceKm, minRating, onRatingUpdate }: RefinementFiltersProps) {
+export function RefinementFilters(props: RefinementFiltersProps) {
+
+    const {minDate, onDateUpdate, onDistanceUpdate, distanceKm, minRating, onRatingUpdate} = props;
 
     const setDistance = (distance) => {
         onDistanceUpdate(distance*1000);
@@ -19,7 +23,7 @@ export function RefinementFilters({ onDistanceUpdate, distanceKm, minRating, onR
         <>
             <div className="widgets flex flex-col-reverse justify-between">
                 <div className="widget-wrapper mb-4 flex-grow">
-                    <h2 className="text-base font-semibold mb-2">Skills</h2>
+                    <h2 className="text-base font-semibold mb-2">Compétences</h2>
                     <RefinementList
                         attribute="companySkills.skillName"
                         showMore
@@ -37,7 +41,7 @@ export function RefinementFilters({ onDistanceUpdate, distanceKm, minRating, onR
                     />
                 </div>
                 <div className="widget-wrapper mb-4 flex-grow">
-                    <h2 className="text-base font-semibold mb-2">Position</h2>
+                    <h2 className="text-base font-semibold mb-2">Poste</h2>
                     <RefinementList
                         attribute="contractPositionName"
                         limit={5}
@@ -53,20 +57,20 @@ export function RefinementFilters({ onDistanceUpdate, distanceKm, minRating, onR
                     />
                 </div>
                 <div>
-                    <div className="widget-wrapper mb-4 flex-grow">
-                        <h2 className="text-base font-semibold mb-2">Start date</h2>
-                        <DateRefinement startDate={"2024-01-11"}/>
+                    <div className="widget-wrapper mb-5 flex-grow">
+                        <h2 className="text-base font-semibold mb-2">A partir du</h2>
+                        <DateRefinement startDate={minDate} onDateUpdate={(date) => onDateUpdate(date)}/>
                     </div>
 
-                    <div className="widget-wrapper mb-4 flex-grow">
-                        <h2 className="text-base font-semibold mb-2">Distance</h2>
+                    <div className="widget-wrapper mb-3 flex-grow">
+                        <h2 className="text-base font-semibold mb-2">Distance maximum</h2>
                         <input name="distance" type="range" min="1" max="35" value={distanceKm}
                                onInput={(e: FormEvent<HTMLInputElement>) => setDistance(Number((e.target as HTMLInputElement).value))}/>
                         <div className="py-2">{distanceKm} km</div>
                     </div>
 
-                    <div className="widget-wrapper mb-4 flex-grow">
-                        <h2 className="text-base font-semibold mb-2">Rating</h2>
+                    <div className="widget-wrapper mb-3 flex-grow">
+                        <h2 className="text-base font-semibold mb-2">Taux d&lsquo;évaluations positives minimum</h2>
                         <CustomRatingRangeSlider
                             ratingPercentage={minRating}
                             onRatingUpdate={(rating) => onRatingUpdate(rating)}

@@ -10,7 +10,9 @@ import {throttle} from "@/utils/debounce-throttle";
 import {FacetAttributes} from "@/infra/search-engine/config";
 import {propsFilter} from "@/utils/propsFilter";
 
-export function DateRefinement({startDate} : {startDate: string}) {
+type DateRefinementProps = {startDate: string, onDateUpdate: (date) => void};
+
+export function DateRefinement({startDate, onDateUpdate}: DateRefinementProps) {
     const { start, range, canRefine, refine } = useRange({
         attribute: "timestamp",
     });
@@ -19,6 +21,8 @@ export function DateRefinement({startDate} : {startDate: string}) {
 
     const handleDateRefinement = (evt) => {
         const date = evt.target.value;
+
+        onDateUpdate(date);
 
         const startTs = Math.floor((new Date(date)).getTime()/1000);
         const endTs = Math.floor(((new Date(date)).getTime() + 864000000)/1000);
@@ -99,7 +103,7 @@ export function CustomClearRefinements(props: any) {
                 disabled={!canRefine}
                 onClick={refine}
                 className={classNames}>
-            Clear refinements
+            Effacer les filtres
         </button>
     );
 }
