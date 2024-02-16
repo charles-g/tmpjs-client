@@ -6,7 +6,7 @@ import {
 import {CustomDatePicker} from "@/components/DuetDatePicker";
 import React, {FormEvent, useState} from "react";
 import cn from "@/utils/className";
-import {throttle} from "@/utils/debounce-throttle";
+import {throttle} from "@/utils/throttle";
 import {FacetAttributes} from "@/infra/search-engine/config";
 import {propsFilter} from "@/utils/propsFilter";
 
@@ -19,7 +19,7 @@ export function DateRefinement({startDate, onDateUpdate}: DateRefinementProps) {
 
     const { indexUiState, setIndexUiState } = useInstantSearch();
 
-    const handleDateRefinement = (evt) => {
+    const handleDateRefinement = throttle((evt) => {
         const date = evt.target.value;
 
         onDateUpdate(date);
@@ -37,7 +37,7 @@ export function DateRefinement({startDate, onDateUpdate}: DateRefinementProps) {
             };
             return value;
         });
-    }
+    });
 
     return (
         <CustomDatePicker
@@ -47,7 +47,12 @@ export function DateRefinement({startDate, onDateUpdate}: DateRefinementProps) {
     )
 }
 
-export function CustomRatingRangeSlider({ ratingPercentage, onRatingUpdate }) {
+export type CustomRatingProps = {
+    ratingPercentage: number,
+    onRatingUpdate: (rating: number) => void
+}
+
+export function CustomRatingRangeSlider({ ratingPercentage, onRatingUpdate } : CustomRatingProps) {
     const { start, range, canRefine, refine } = useRange({
         attribute: "postContractFeedbacks.positivePercentage",
         min: 0,
