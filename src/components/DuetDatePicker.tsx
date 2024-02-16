@@ -1,10 +1,11 @@
 // @ts-nocheck
+// TODO: handle TS errors properly
 
 'use client'
 
 import React, { useEffect, useRef } from "react";
 import { defineCustomElements } from "@duetds/date-picker/dist/loader";
-import '@duetds/date-picker/dist/duet/themes/default.css'; // Make sure to import the styles
+import '@duetds/date-picker/dist/duet/themes/default.css';
 
 function useListener(ref, eventName, handler) {
     useEffect(() => {

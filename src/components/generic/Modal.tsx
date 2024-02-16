@@ -1,4 +1,5 @@
 // @ts-nocheck
+// TODO: handle TS errors properly
 
 import React from 'react';
 import { Dialog, DialogOverlay, DialogContent } from '@radix-ui/react-dialog';
