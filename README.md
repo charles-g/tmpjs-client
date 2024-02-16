@@ -1,5 +1,6 @@
 #### (In progress)
-#### This is meant to evaluate a possible workaround for the "booking" use case with Algolia. We build a search engine for temporary jobs.
+#### This is meant to assess possible workarounds for the "booking" use case with Algolia. Here we build a search UI for temporary jobs.
+#### We also assess building custom search widgets leveraging the React instantsearch V7 API in general https://www.algolia.com/doc/api-reference/widgets/react/
 
 #### Deployment:
 https://tmpjs-client.vercel.app/
@@ -15,7 +16,9 @@ https://discourse.algolia.com/t/working-with-dates-availability-booking-system/1
 As a possible workaround, we index job availabilities (dates) with company context,
 group these by company.
 
-As pagination becomes incorrect, we try using infinite hits for a workaround.
+#### Noticed difficulties:
+Hit count reflects the number of time slots when we'd like to have the number of companies.
+Pagination is also incorrect, we try using infinite hits (https://www.algolia.com/doc/api-reference/widgets/infinite-hits/react/) as a workaround.
 
 #### Tech
 * Next.js 14 with app directory / React 18
