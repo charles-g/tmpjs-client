@@ -46,7 +46,7 @@ function SearchPage() {
             onClick={handleOpenModal}
             className="visible md:invisible my-3 px-4 py-2 bg-gray-500 text-white rounded cursor-pointer"
         >
-          Filters
+          Filtrer
         </button>
 
         <InstantSearch
