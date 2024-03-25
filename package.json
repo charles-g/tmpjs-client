@@ -19,7 +19,7 @@
     "react-dom": "^18.2.0",
     "react-instantsearch": "^7.5.0",
     "react-leaflet": "^4.2.1",
-    "tailwindcss-radix": "^2.8.0"
+    "tailwindcss-radix": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
